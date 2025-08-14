@@ -5,23 +5,23 @@ import java.time.LocalDate;
 public class Pedido {
 
     private int id;
-    private int pedidoId;
+    private int clienteId;
     private LocalDate dataPedido;
     private int volumeM3;
     private double pesoKg;
     private StatusPedido status;
 
-    public Pedido(int id, int pedidoId, LocalDate dataPedido, int volumeM3, double pesoKg, StatusPedido status) {
+    public Pedido(int id, int clienteId, LocalDate dataPedido, int volumeM3, double pesoKg, StatusPedido status) {
         this.id = id;
-        this.pedidoId = pedidoId;
+        this.clienteId = clienteId;
         this.dataPedido = dataPedido;
         this.volumeM3 = volumeM3;
         this.pesoKg = pesoKg;
         this.status = status;
     }
 
-    public Pedido(int pedidoId, LocalDate dataPedido, int volumeM3, double pesoKg, StatusPedido status) {
-        this.pedidoId = pedidoId;
+    public Pedido(int clienteId, LocalDate dataPedido, int volumeM3, double pesoKg, StatusPedido status) {
+        this.clienteId = clienteId;
         this.dataPedido = dataPedido;
         this.volumeM3 = volumeM3;
         this.pesoKg = pesoKg;
@@ -32,8 +32,8 @@ public class Pedido {
         return id;
     }
 
-    public int getPedidoId() {
-        return pedidoId;
+    public int getClienteId() {
+        return clienteId;
     }
 
     public LocalDate getDataPedido() {
@@ -50,5 +50,16 @@ public class Pedido {
 
     public StatusPedido getStatus() {
         return status;
+    }
+
+    @Override
+    public String toString() {
+        return "Id do Pedido: " + id +
+                "\nId do cliente: " + clienteId +
+                "\nData do Pedido: " + dataPedido +
+                "\nVolume: " + volumeM3 +
+                "\nPeso em Kg: " + pesoKg +
+                "\nStatus: " + status +
+                '\n';
     }
 }

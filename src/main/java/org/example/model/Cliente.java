@@ -52,6 +52,12 @@ public class Cliente {
 
     @Override
     public String toString() {
-        return "";
+        return "Id: " + id +
+                "\nNome: " + nome +
+                "\nEndereço: " + endereco + ", "
+                + cidade + ", " + estado +
+                "\n";
     }
+
+
 }

@@ -42,4 +42,14 @@ public class Motorista {
     public String getCidadeBase() {
         return cidadeBase;
     }
+
+    @Override
+    public String toString() {
+        return "Id: " + id +
+                "\nNome: " + nome +
+                "\nCnh: " + cnh +
+                "\nVeículo: " + veiculo +
+                "\nCidade base: " + cidadeBase +
+                '\n';
+    }
 }
