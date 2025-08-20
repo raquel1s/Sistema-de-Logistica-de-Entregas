@@ -29,6 +29,8 @@ public class Main {
             case 5 -> registrarEventoEntrega();
             case 6 -> atualizarStatusEntrega();
             case 7 -> listarEntregas();
+            case 8 -> totalEntregasMotorista();
+            case 9 -> clienteMaiorVolume();
             case 0 -> {
                 sair = true;
                 break;
@@ -41,6 +43,22 @@ public class Main {
         }
     }
 
+    private static void clienteMaiorVolume() {
+        System.out.println("=== Clientes com o Maior volume Entregue ===");
+        for(ClienteVolume c : PedidoDAO.clienteMaiorVolume()){
+            System.out.println(c);
+        }
+        System.out.println();
+    }
+
+    private static void totalEntregasMotorista() {
+        System.out.println("=== Total de Entregas por Motorista ===");
+        for(EntregasMotorista em : EntregaDAO.totalEntregasMotorista()){
+            System.out.println(em);
+        }
+        System.out.println();
+    }
+
     private static void listarEntregas() {
         for(EntregasLista e : EntregaDAO.listarEntregas()){
             System.out.println(e);
@@ -48,11 +66,29 @@ public class Main {
     }
 
     private static void atualizarStatusEntrega() {
-        listarEntregas();
+        for(EntregasLista e : EntregaDAO.listarEntregas()){
+            if(e.getStatus() == StatusEntrega.EM_ROTA){
+                System.out.println(e);
+            }
+        }
 
         System.out.println("Digite o id da entrega: ");
         int id = SC.nextInt();
 
+        System.out.println("Digite o Status atual da entrega: ");
+        System.out.println("1 - ENTREGUE");
+        System.out.println("2 - ATRASADO");
+        int opcao = SC.nextInt();
+
+        switch (opcao){
+            case 1 -> {
+                EntregaDAO.atualizarStatusEntrega(id, StatusEntrega.ENTREGUE, LocalDate.now());
+                Entrega entrega = EntregaDAO.buscarEntregaId(id);
+                PedidoDAO.atualizarStatusPedido(entrega.getPedidoId(), StatusPedido.ENTREGUE);
+            }
+            case 2 -> EntregaDAO.atualizarStatusEntrega(id, StatusEntrega.ATRASADA, LocalDate.now());
+            default -> System.out.println("Opção Inválida.");
+        }
     }
 
     private static void registrarEventoEntrega() {
@@ -60,6 +96,7 @@ public class Main {
 
         System.out.println("Digite o id da entrega: ");
         int id = SC.nextInt();
+        SC.nextLine();
 
         System.out.println("Digite a descrição do histórico da entrega: ");
         String descricao = SC.nextLine();
@@ -70,7 +107,9 @@ public class Main {
 
     private static void atribuirPedidoMotorista() {
         for(Pedido p : PedidoDAO.listarPedido()){
-            System.out.println(p);
+            if(p.getStatus() == StatusPedido.PENDENTE){
+                System.out.println(p);
+            }
         }
 
         System.out.println("Digite o id do pedido: ");
@@ -83,7 +122,7 @@ public class Main {
         System.out.println("Digite o id do motorista: ");
         int motoristaId = SC.nextInt();
 
-        Entrega entrega = new Entrega(id, motoristaId, LocalDate.now());
+        Entrega entrega = new Entrega(id, motoristaId, LocalDate.now(), StatusEntrega.EM_ROTA);
         EntregaDAO.atribuirPedido(entrega);
     }
 

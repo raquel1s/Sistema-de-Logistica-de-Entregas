@@ -11,17 +11,18 @@ public class Entrega {
     private LocalDate dataEntrega;
     private StatusEntrega status;
 
-    public Entrega(int pedidoId, int motoristaId, LocalDate dataSaida) {
+    public Entrega(int pedidoId, int motoristaId, LocalDate dataSaida, StatusEntrega status) {
         this.pedidoId = pedidoId;
         this.motoristaId = motoristaId;
         this.dataSaida = dataSaida;
+        this.status = status;
     }
 
-    public Entrega(int id, int pedidoId, int motoristaId, LocalDate dataSaida) {
+    public Entrega(int id, int pedidoId, int motoristaId, StatusEntrega status) {
         this.id = id;
         this.pedidoId = pedidoId;
         this.motoristaId = motoristaId;
-        this.dataSaida = dataSaida;
+        this.status = status;
     }
 
     public int getId() {

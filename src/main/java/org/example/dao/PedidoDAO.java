@@ -1,6 +1,8 @@
 package org.example.dao;
 
+import org.example.model.ClienteVolume;
 import org.example.model.Pedido;
+import org.example.model.StatusEntrega;
 import org.example.model.StatusPedido;
 
 import java.sql.*;
@@ -56,5 +58,54 @@ public class PedidoDAO {
         }
 
         return pedidos;
+    }
+
+    public static void atualizarStatusPedido(int id, StatusPedido status){
+        String sql = "UPDATE pedido SET status_pedido = ? WHERE id = ?";
+
+        try(Connection conn = Conexao.conectar();
+            PreparedStatement stmt = conn.prepareStatement(sql)){
+
+            stmt.setString(1, status.name());
+            stmt.setInt(2, id);
+            stmt.executeUpdate();
+
+            System.out.println("Status do pedido atualizado com sucesso!");
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public static ArrayList<ClienteVolume> clienteMaiorVolume() {
+        ArrayList<ClienteVolume> clientesVolume = new ArrayList<>();
+
+        String sql = "SELECT c.nome as cliente " +
+                ", SUM(p.volume_m3) as volume_total " +
+                "FROM pedido p " +
+                "LEFT JOIN cliente c " +
+                "ON p.cliente_id = c.id " +
+                "WHERE p.status_pedido = 'ENTREGUE'" +
+                "GROUP BY c.nome " +
+                "ORDER BY volume_total DESC";
+
+        try(Connection conn = Conexao.conectar();
+        PreparedStatement stmt = conn.prepareStatement(sql)){
+
+            ResultSet rs = stmt.executeQuery();
+
+            while(rs.next()){
+                String cliente = rs.getString("cliente");
+                int volumeTotal = rs.getInt("volume_total");
+
+                ClienteVolume cv = new ClienteVolume(cliente, volumeTotal);
+                clientesVolume.add(cv);
+            }
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        return clientesVolume;
     }
 }
