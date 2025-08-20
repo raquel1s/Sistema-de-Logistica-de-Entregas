@@ -10,6 +10,25 @@ import java.util.ArrayList;
 
 public class ClienteDAO {
 
+    public static Cliente buscarClienteCpgCnpj(String cpfCnpj){
+        String sql = "SELECT id, nome, cpf_cnpj, endereco, cidade, estado " +
+                "FROM cliente " +
+                "WHERE cpf_cnpj = ?";
+
+        try(Connection conn = Conexao.conectar();
+        PreparedStatement stmt = conn.prepareStatement(sql)){
+
+            ResultSet rs = stmt.executeQuery();
+
+            while(rs.next()){
+
+            }
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
     public static void cadastrarCliente(Cliente cliente){
         String sql = "INSERT INTO cliente (nome, cpf_cnpj, endereco, cidade, estado) VALUES (?, ?, ?, ?, ?)";
 

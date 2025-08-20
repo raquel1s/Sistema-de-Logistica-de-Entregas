@@ -1,9 +1,6 @@
 package org.example.dao;
 
-import org.example.model.ClienteVolume;
-import org.example.model.Pedido;
-import org.example.model.StatusEntrega;
-import org.example.model.StatusPedido;
+import org.example.model.*;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -107,5 +104,37 @@ public class PedidoDAO {
         }
 
         return clientesVolume;
+    }
+
+    public static ArrayList<PendentesEstado> pedidosPendentesEstado() {
+        ArrayList<PendentesEstado> pendentesEstados = new ArrayList<>();
+
+        String sql = "SELECT c.estado as estado " +
+                ", COUNT(p.id) as pedido " +
+                "FROM pedido p " +
+                "LEFT JOIN cliente c " +
+                "ON p.cliente_id = c.id " +
+                "WHERE p.status_pedido = 'PENDENTE'" +
+                "GROUP BY c.estado " +
+                "ORDER BY pedido DESC";
+
+        try(Connection conn = Conexao.conectar();
+        PreparedStatement stmt = conn.prepareStatement(sql)){
+
+            ResultSet rs = stmt.executeQuery();
+
+            while(rs.next()){
+                String estado = rs.getString("estado");
+                int pedidos = rs.getInt("pedido");
+
+                PendentesEstado pe = new PendentesEstado(estado, pedidos);
+                pendentesEstados.add(pe);
+            }
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        return pendentesEstados;
     }
 }

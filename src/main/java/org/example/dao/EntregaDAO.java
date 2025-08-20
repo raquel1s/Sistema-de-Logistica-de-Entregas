@@ -1,9 +1,6 @@
 package org.example.dao;
 
-import org.example.model.Entrega;
-import org.example.model.EntregasLista;
-import org.example.model.EntregasMotorista;
-import org.example.model.StatusEntrega;
+import org.example.model.*;
 
 import java.awt.image.AreaAveragingScaleFilter;
 import java.sql.*;
@@ -154,5 +151,40 @@ public class EntregaDAO {
         }
 
         return entregas;
+    }
+
+
+    public static ArrayList<AtrasadaCidade> entregasAtrasadasCidade() {
+        ArrayList<AtrasadaCidade> atrasadaCidades = new ArrayList<>();
+
+        String sql = "SELECT c.cidade as cidade " +
+                ", COUNT(e.id) as entregas " +
+                "FROM entrega e " +
+                "LEFT JOIN pedido p " +
+                "ON e.pedido_id = p.id " +
+                "LEFT JOIN cliente c " +
+                "ON p.cliente_id = c.id " +
+                "WHERE e.status_entrega = 'ATRASADA'" +
+                "GROUP BY c.cidade " +
+                "ORDER BY entregas DESC";
+
+        try(Connection conn = Conexao.conectar();
+        PreparedStatement stmt = conn.prepareStatement(sql)){
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()){
+                String cidade = rs.getString("cidade");
+                int entregas = rs.getInt("entregas");
+
+                AtrasadaCidade ac = new AtrasadaCidade(cidade, entregas);
+                atrasadaCidades.add(ac);
+            }
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        return atrasadaCidades;
     }
 }

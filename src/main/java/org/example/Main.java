@@ -31,6 +31,9 @@ public class Main {
             case 7 -> listarEntregas();
             case 8 -> totalEntregasMotorista();
             case 9 -> clienteMaiorVolume();
+            case 10 -> pedidosPendentesEstado();
+            case 11 -> entregasAtrasadasCidade();
+            case 12 -> buscarCliente();
             case 0 -> {
                 sair = true;
                 break;
@@ -41,6 +44,32 @@ public class Main {
         if(!sair){
             inicio();
         }
+    }
+
+    private static void buscarCliente() {
+        System.out.println("=== Buscar Pedido por CPF/CNPJ do Cliente ===");
+        System.out.println("Digite o CPF/CNPJ do cliente para buscar os pedidos dele: ");
+        String cpfCnpj = SC.nextLine();
+
+        for(Pedido p : PedidoDAO.listarPedido()){
+            System.out.println(p);
+        }
+    }
+
+    private static void entregasAtrasadasCidade() {
+        System.out.println("=== Entregas atrasadas por Cidade ===");
+        for(AtrasadaCidade ac : EntregaDAO.entregasAtrasadasCidade()){
+            System.out.println(ac);
+        }
+        System.out.println();
+    }
+
+    private static void pedidosPendentesEstado() {
+        System.out.println("=== Pedidos Pendentes por Estado ===");
+        for(PendentesEstado pe : PedidoDAO.pedidosPendentesEstado()){
+            System.out.println(pe);
+        }
+        System.out.println();
     }
 
     private static void clienteMaiorVolume() {
