@@ -51,8 +51,15 @@ public class Main {
         System.out.println("Digite o CPF/CNPJ do cliente para buscar os pedidos dele: ");
         String cpfCnpj = SC.nextLine();
 
-        for(Pedido p : PedidoDAO.listarPedido()){
-            System.out.println(p);
+        Cliente c = ClienteDAO.buscarClienteCpgCnpj(cpfCnpj);
+
+        if(c != null){
+            System.out.println("=== "+ c.getNome()+ " ===");
+            for(Pedido p : PedidoDAO.listarPedido()){
+                if(p.getClienteId() == c.getId()){
+                    System.out.println(p);
+                }
+            }
         }
     }
 
